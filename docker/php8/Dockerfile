@@ -3,18 +3,12 @@ FROM --platform=linux/amd64 debian:bookworm
 ENV user=www-data
 ENV group=www-data
 
-ENV POSTGRES_PASSWORD=configme
-ENV POSTGRES_USER=fusionpbx
-ENV POSTGRES_DB=fusionpbx
-ENV POSTGRES_HOST=db
-
-
 #set the environment path
 RUN export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get upgrade -y
 
 #Add dependencies
-RUN apt-get update -y && apt-get install -y apt-transport-https gnupg2 curl wget lsb-release systemd systemd-sysv ca-certificates dialog nano net-tools git && \
+RUN apt-get update -y && apt-get install -y apt-transport-https gnupg2 nano procps net-tools curl wget lsb-release systemd systemd-sysv ca-certificates dialog nano net-tools git && \
     wget -qO- https://packages.sury.org/php/apt.gpg | gpg --dearmor > /etc/apt/trusted.gpg.d/sury-php-8.x.gpg && \
     chmod 644 /etc/apt/trusted.gpg.d/sury-php-8.x.gpg && \
     echo "deb https://packages.sury.org/php/ bookworm main" > /etc/apt/sources.list.d/php.list && \

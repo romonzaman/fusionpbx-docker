@@ -1,0 +1,91 @@
+services:
+  db:
+    build:
+      context: .
+      dockerfile: ./docker/postgresql/Dockerfile
+    platform: linux/amd64
+    env_file:
+      - ./.env
+    volumes:
+      - ${DOCKER_PWD}/docker/postgresql/fusionpbx_db_lance:/docker-entrypoint-initdb.d/init.sql
+      - postgresql_data:/var/lib/postgresql/data
+    network_mode: host
+    # ports:
+    #   - "5432:5432"
+
+  adminer:
+    image: adminer
+    restart: always
+    environment:
+      ADMINER_DEFAULT_SERVER: host.docker.internal
+      # ADMINER_DEFAULT_SERVER: localhost
+    network_mode: host
+    # ports:
+    #   - "9088:8080"
+
+  nginx:
+    image: nginx:latest
+    env_file:
+      - ./.env
+    volumes:
+      - ${DOCKER_PWD}/docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ${DOCKER_PWD}/fusionpbx:/usr/share/nginx/html:ro
+      - ${DOCKER_PWD}/docker/nginx/certs:/etc/nginx/certs
+      - ${DOCKER_PWD}/docker/freeswitch/conf:/etc/freeswitch
+      - fusionpbx_cache_dir:/var/cache/fusionpbx
+    depends_on:
+      - phpfpm8
+    network_mode: host
+    # ports:
+    #   - "8443:443"
+    #   - "80:80"
+
+  phpfpm8:
+    build:
+      context: .
+      dockerfile: ./docker/php8/Dockerfile
+    platform: linux/amd64
+    env_file:
+      - ./.env
+    volumes:
+      - fusionpbx_cache_dir:/var/cache/fusionpbx
+      - fusionpbx_recording_dir:/var/lib/freeswitch/recordings
+      - ${DOCKER_PWD}/fusionpbx:/var/www/fusionpbx
+      - ${DOCKER_PWD}/docker/php8/config.conf:/etc/fusionpbx/config.conf
+    depends_on:
+      - db
+    network_mode: host
+    # ports:
+    #   - "9000:9000"
+
+  freeswitch:
+    build:
+      context: .
+      dockerfile: ./docker/freeswitch/Dockerfile
+      args:
+        SIGNALWIRE_PASSWORD: ${SIGNALWIRE_PASSWORD}
+    platform: linux/amd64
+    env_file:
+      - ./.env
+    volumes:
+      - ${DOCKER_PWD}/docker/php8/config.conf:/etc/fusionpbx/config.conf
+      - fusionpbx_cache_dir:/var/cache/fusionpbx
+      - ${DOCKER_PWD}/docker/freeswitch/conf:/etc/freeswitch
+      - ${DOCKER_PWD}/fusionpbx/app/switch/resources/scripts:/usr/share/freeswitch/scripts
+      - fusionpbx_recording_dir:/var/lib/freeswitch/recordings
+    depends_on:
+      - db
+    network_mode: host
+    # ports:
+    #   - "5060:5060/tcp"
+    #   - "5060:5060/udp"
+    #   - "20000-20010:20000-20010/udp"
+    #   - "9021:8021/tcp"
+
+volumes:
+  postgresql_data:
+  pgadmin-data:
+  fusionpbx_cache_dir:
+  redis_data:
+  switch_voicemail:
+  fusionpbx_recording_dir:

@@ -1,0 +1,8 @@
+.env
+.DS_Store
+fusionpbx/
+fusionpbx_db
+wb.md
+docker/postgresql/fusionpbx_db
+docker/postgresql/fusionpbx_db1
+docker/php8/config.conf

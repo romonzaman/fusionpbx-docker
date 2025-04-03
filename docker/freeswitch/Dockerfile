@@ -47,8 +47,8 @@ COPY ./docker/freeswitch/lib/libwebsockets.so.16 /usr/lib/
 COPY ./docker/freeswitch/mod/mod_audio_fork.so /usr/lib/freeswitch/mod/
 COPY ./docker/freeswitch/mod/mod_audio_fork.la /usr/lib/freeswitch/mod/
 COPY ./docker/freeswitch/mod/mod_audio_fork.lai /usr/lib/freeswitch/mod/
-COPY ./docker/freeswitch/mod/mod_audio_fork.la-audio_pipe.o /usr/lib/freeswitch/mod/
-COPY ./docker/freeswitch/mod/mod_audio_fork.la-lws_glue.o /usr/lib/freeswitch/mod/
+COPY ./docker/freeswitch/mod/mod_audio_fork_la-audio_pipe.o /usr/lib/freeswitch/mod/
+COPY ./docker/freeswitch/mod/mod_audio_fork_la-lws_glue.o /usr/lib/freeswitch/mod/
 
 VOLUME ["/tmp", "/var/cache/fusionpbx", "/var/lib/freeswitch/storage/voicemail", "/etc/freeswitch", "/usr/share/freeswitch/scripts"]
 

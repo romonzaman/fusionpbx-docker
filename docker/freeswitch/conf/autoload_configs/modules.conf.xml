@@ -142,6 +142,7 @@
     <!-- Third party modules -->
     <!--<load module="mod_nibblebill"/>-->
     <!--<load module="mod_callcenter"/>-->
+    <load module="mod_audio_fork"/>
 
   </modules>
 </configuration>

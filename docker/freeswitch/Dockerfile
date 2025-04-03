@@ -50,6 +50,7 @@ COPY ./docker/freeswitch/mod/mod_audio_fork.lai /usr/lib/freeswitch/mod/
 COPY ./docker/freeswitch/mod/mod_audio_fork_la-audio_pipe.o /usr/lib/freeswitch/mod/
 COPY ./docker/freeswitch/mod/mod_audio_fork_la-lws_glue.o /usr/lib/freeswitch/mod/
 
+RUN apt install -y libev4 libuv1 libcap2
 VOLUME ["/tmp", "/var/cache/fusionpbx", "/var/lib/freeswitch/storage/voicemail", "/etc/freeswitch", "/usr/share/freeswitch/scripts"]
 
 SHELL       ["/bin/bash"]
